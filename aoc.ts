@@ -31,9 +31,13 @@ async function runFile(path: string) {
         stderr: 'piped'
     });
 
-    const outBuff = new Uint8Array(1024);
-    while (await p.stdout.read(outBuff)) {
-        await Deno.stdout.write(outBuff);
+    const outBuff = new Uint8Array(8192);
+    const decoder = new TextDecoder();
+    let n = await p.stdout.read(outBuff);
+    while (n) {
+        let content = decoder.decode(outBuff.subarray(0, n)).trim();
+        console.log(content);
+        n = await p.stdout.read(outBuff);
     }
 
     const { code } = await p.status();

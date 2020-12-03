@@ -1,5 +1,13 @@
 import { exists } from "https://deno.land/std@0.79.0/fs/mod.ts";
 
+export const BOX_RED = '\x1b[91m\u2588\x1b[0m';
+export const BOX_GRN = '\x1b[92m\u2588\x1b[0m';
+export const BOX_YEL = '\x1b[93m\u2588\x1b[0m';
+export const BOX_BLU = '\x1b[94m\u2588\x1b[0m';
+export const BOX_MAG = '\x1b[95m\u2588\x1b[0m';
+export const BOX_CYN = '\x1b[96m\u2588\x1b[0m';
+export const BOX_WHT = '\u2588';
+
 let timer = 0;
 
 export async function getInput(day: number): Promise<string> {
@@ -33,7 +41,7 @@ export function tick() {
 
 export function tock() {
     let elapsed = round(performance.now() - timer, 4);
-    return `\x1b[38;2;0;255;255m${elapsed} ms\x1b[0m`
+    return `\x1b[96m${elapsed} ms\x1b[0m`
 }
 
 function round(num: number, decimalPlaces: number = 0) {
