@@ -1,4 +1,4 @@
-import { exists } from "https://deno.land/std@0.79.0/fs/mod.ts";
+import { exists, ensureFile, ensureDir } from "https://deno.land/std@0.79.0/fs/mod.ts";
 import { parse } from "https://deno.land/std@0.79.0/flags/mod.ts";
 
 let args = parse(Deno.args, { boolean: true });
@@ -11,6 +11,14 @@ if (args._.length < 1) {
 
 for (let day of args._) {
     let rootPath = `./src/${day}/`;
+
+    if (args.init) {
+        await ensureDir(rootPath);
+        ensureFile(rootPath + `${day}_a.ts`);
+        ensureFile(rootPath + `${day}_b.ts`);
+        continue;
+    }
+
     if (await exists(rootPath + `${day}_a.ts`)) {
         console.log(`Running ${day} A:`);
         await runFile(rootPath + `${day}_a.ts`);
