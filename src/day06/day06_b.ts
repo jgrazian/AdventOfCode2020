@@ -1,4 +1,3 @@
-import { isPosixPathSeparator } from "https://deno.land/std@0.79.0/path/_util.ts";
 import { getInput, tick, tock } from '../common.ts';
 
 const input = await getInput(6);
