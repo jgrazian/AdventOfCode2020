@@ -57,9 +57,7 @@ class Computer {
         this.ptr = from || 0;
 
         while (this.doOp()) {
-            if (this.ptr == to) {
-                return this.acc;
-            }
+            if (this.ptr == to) return this.acc;
         }
         return this.acc;
     }
@@ -70,9 +68,7 @@ class Computer {
 
         let prevPtr = 0;
         while (this.doOp()) {
-            if (seen.has(this.ptr)) {
-                return prevPtr;
-            }
+            if (seen.has(this.ptr)) return prevPtr;
             seen.add(this.ptr);
             prevPtr = this.ptr;
         }
