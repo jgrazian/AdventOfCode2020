@@ -1,7 +1,7 @@
 import { getInput, tick, tock } from '../common.ts';
 
 const input = await getInput(9);
-const numbers = new Int32Array(input.split('\n').map(n => parseInt(n)));
+const numbers = new Uint32Array(input.split('\n').map(n => parseInt(n)));
 const preambleSize = 25;
 
 tick();
