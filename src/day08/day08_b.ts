@@ -30,7 +30,7 @@ class Computer {
         this.tape = this.load(instructions);
     }
 
-    doOp() {
+    doOp(): boolean {
         let op = this.tape[this.ptr + 0];
         let arg = this.tape[this.ptr + 1];
         if (op == OpCode.Nop) {
@@ -49,6 +49,7 @@ class Computer {
         if (op == OpCode.Ret) {
             return false;
         }
+        return false;
     }
 
     /// Runs tape from ptr to ptr
