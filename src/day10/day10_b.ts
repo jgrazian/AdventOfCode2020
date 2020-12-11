@@ -4,30 +4,23 @@ const input = await getInput(10);
 let adapters = input.split('\n').map(n => parseInt(n));
 adapters.push(0);
 adapters = adapters.sort((a, b) => Number(a) - Number(b));
-adapters.push(adapters[adapters.length - 1] + 3);
+const maxJolts = adapters[adapters.length - 1] + 3;
+adapters.push(maxJolts);
 
 const n = adapters.length;
 
-// _ -> 3 1 3 
-// x -> 3 1 1 3
-// y -> 3 1 1 1 3
-// z -> 3 1 1 1 1 3
-// ans = x^2 * 4^y * 7^z
-
 tick();
-console.log(adapters);
-let deltas = '';
-for (let i=0; i < n - 1; i++) {
-    deltas += (adapters[i + 1] - adapters[i]).toString();
+let pathMap = new Map(adapters.map(v => [v, 0]));
+pathMap.set(0, 1);
+
+for (let adapter of adapters) {
+    for (let diff = 1; diff < 4; diff++) {
+        let next = adapter + diff;
+        if (pathMap.has(next)) {
+            pathMap.set(next, pathMap.get(next)! + pathMap.get(adapter)!);
+        }
+    }
 }
 
-console.log(deltas);
-let x = [...deltas.matchAll(/11/gm)].length;
-console.log([...deltas.matchAll(/11/gm)]);
-let y = [...deltas.matchAll(/111/gm)].length;
-console.log([...deltas.matchAll(/111/gm)]);
-let z = [...deltas.matchAll(/1111/gm)].length;
-console.log([...deltas.matchAll(/1111/gm)]);
-
 console.log(tock());
-console.log(Math.pow(x, 2) * Math.pow(4, y) * Math.pow(7, z));
+console.log(pathMap.get(maxJolts));
