@@ -1,4 +1,3 @@
-import { copy } from "https://deno.land/std@0.79.0/fs/copy.ts";
 import { getInput, tick, tock } from '../common.ts';
 
 const input = await getInput(11);
@@ -31,7 +30,7 @@ const grid = new Uint8Array(tmp);
 const working = new Uint8Array(tmp);
 
 // printMat(grid);
-// console.log(countOccupied(3, 3));
+// console.log(countOccupied(4, 3));
 
 let ocPrev = 0;
 let ocCurr = 1;
@@ -57,7 +56,7 @@ console.log(tock());
 console.log(ocCurr);
 
 function countOccupied(i: number, j: number): number {
-    let matches = [0, 0, 0, 0, 0, 0, 0, 0]; // [tl, tm, tr, ml, mr, bl, bm, br]
+    let matches = [[999, 0], [999, 0], [999, 0], [999, 0], [999, 0], [999, 0], [999, 0], [999, 0]]; // [[dist, tl], [dist, tm], tr, ml, mr, bl, bm, br] 
     for (let ii = 0; ii <= n; ii++) {
         for (let jj = 0; jj <= m; jj++) {
 
@@ -65,30 +64,40 @@ function countOccupied(i: number, j: number): number {
                 continue;
             if (ii < 0 || ii >= n || jj < 0 || jj >= m)
                 continue;
-            if (grid[getIdx(ii, jj)] != Tile.taken)
+            if (grid[getIdx(ii, jj)] == Tile.floor)
                 continue;
 
+            let tile = grid[getIdx(ii, jj)] - 1;
             let slope = (ii - i) / (jj - j);
             let dist = Math.abs(ii - i) + Math.abs(jj - j);
-            if (slope == 1 && ii < i)
-                matches[0] = 1;
-            else if (slope == 1 && ii > i)
-                matches[7] = 1;
-            else if (slope == -1 && ii < i)
-                matches[5] = 1;
-            else if (slope == -1 && ii > i)
-                matches[2] = 1;
-            else if ((slope == Infinity || slope == -Infinity) && ii > i)
-                matches[1] = 1;
-            else if ((slope == Infinity || slope == -Infinity) && ii < i)
-                matches[6] = 1;
-            else if (slope == 0 && jj < j)
-                matches[3] = 1;
-            else if (slope == 0 && jj > j)
-                matches[4] = 1;
+            if (slope == 1 && ii < i && dist < matches[0][0]) {
+                matches[0][1] = tile;
+                matches[0][0] = dist;
+            } else if (slope == 1 && ii > i && dist < matches[7][0]) {
+                matches[7][1] = tile;
+                matches[7][0] = dist;
+            } else if (slope == -1 && ii < i && dist < matches[5][0]) {
+                matches[5][1] = tile;
+                matches[5][0] = dist;
+            } else if (slope == -1 && ii > i && dist < matches[2][0]) {
+                matches[2][1] = tile;
+                matches[2][0] = dist;
+            } else if ((slope == Infinity || slope == -Infinity) && ii > i && dist < matches[1][0]) {
+                matches[1][1] = tile;
+                matches[1][0] = dist;
+            } else if ((slope == Infinity || slope == -Infinity) && ii < i && dist < matches[6][0]) {
+                matches[6][1] = tile;
+                matches[6][0] = dist;
+            } else if (slope == 0 && jj < j && dist < matches[3][0]) {
+                matches[3][1] = tile;
+                matches[3][0] = dist;
+            } else if (slope == 0 && jj > j && dist < matches[4][0]) {
+                matches[4][1] = tile;
+                matches[4][0] = dist;
+            }
         }
     }
-    return matches.reduce((p, c) => p + c);
+    return matches.map(m => m[1]).reduce((p, c) => p + c);
 }
 
 function getIdx(i: number, j: number): number {
