@@ -23,7 +23,7 @@ const rules = new Map([
     [Tile.empty, (n: number) => (n==0) ? Tile.taken : Tile.empty],
     [Tile.taken, (n: number) => (n>=4) ? Tile.empty : Tile.taken],
 ]);
-
+tick();
 let tmp = layout.flat().map(line => line.trim().split('').map(char => tileMap.get(char)!).flat()).flat();
 const grid = new Uint8Array(tmp);
 const working = new Uint8Array(tmp);
@@ -47,7 +47,9 @@ while (ocPrev - ocCurr != 0) {
     }
     grid.set(working, 0);
 }
-printMat(grid)
+
+console.log(tock());
+console.log(ocCurr);
 
 function countOccupied(i: number, j: number): number {
     let sum = 0;
@@ -56,7 +58,7 @@ function countOccupied(i: number, j: number): number {
 
             if (ii == i && jj == j)
                 continue;
-            if (ii < 0 || ii > n || jj < 0 || jj > m)
+            if (ii < 0 || ii >= n || jj < 0 || jj >= m)
                 continue;
 
             if (grid[getIdx(ii, jj)] == Tile.taken) sum++;
