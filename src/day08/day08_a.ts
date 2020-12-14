@@ -99,5 +99,5 @@ tick();
 let c = new Computer(input);
 let ans = c.run(0, c.findLoop());
 
-console.log(tock());
+console.error(tock());
 console.log(ans);

@@ -21,5 +21,5 @@ for (let bus of buses) {
     }
 }
 
-console.log(tock());
+console.error(tock());
 console.log(minMod * busId);

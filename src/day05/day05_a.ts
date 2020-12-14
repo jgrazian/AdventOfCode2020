@@ -16,5 +16,5 @@ for (let ticket of tickets) {
     }
 }
 
-console.log(tock());
+console.error(tock());
 console.log(maxId);

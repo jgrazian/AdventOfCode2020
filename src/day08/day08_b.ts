@@ -124,5 +124,5 @@ tick();
 let c = new Computer(input);
 let ans = c.fixLoop();
 
-console.log(tock());
+console.error(tock());
 console.log(ans);

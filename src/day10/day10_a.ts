@@ -18,5 +18,5 @@ for (let i=0; i < adapters.length; i++) {
 }
 joltDiff[(endJolts - curJolts) - 1]++;
 
-console.log(tock());
+console.error(tock());
 console.log(joltDiff[0] * joltDiff[2]);

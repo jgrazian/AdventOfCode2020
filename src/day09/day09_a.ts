@@ -26,7 +26,7 @@ for (let i=preambleSize; i < numbers.length; i++) {
     }
 
     if (!isValid) {
-        console.log(tock());
+        console.error(tock());
         console.log(target);
         break;
     }

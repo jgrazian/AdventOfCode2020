@@ -36,5 +36,5 @@ for (let i = 0; i < np.length; i++) {
     ans += BigInt(a[i]*np[i]*u[i]);
 }
 
-console.log(tock());
+console.error(tock());
 console.log(Number(ans % BigInt(N)));

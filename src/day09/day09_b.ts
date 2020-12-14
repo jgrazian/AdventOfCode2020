@@ -17,7 +17,7 @@ for (let i=0; i < numbers.length - 1; i++) {
         if (sum == target) {
             done = true;
             let sub = numbers.slice(i, j).sort();
-            console.log(tock());
+            console.error(tock());
             console.log(sub[0] + sub[sub.length - 1])
             break;
         }

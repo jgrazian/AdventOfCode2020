@@ -48,7 +48,7 @@ while (ocPrev - ocCurr != 0) {
     grid.set(working, 0);
 }
 
-console.log(tock());
+console.error(tock());
 console.log(ocCurr);
 
 function countOccupied(i: number, j: number): number {

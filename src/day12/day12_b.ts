@@ -37,5 +37,5 @@ for (let action of actions) {
     opMap.get(action[0])!(action[1]);
 }
 
-console.log(tock());
+console.error(tock());
 console.log(Math.abs(shipPos[0]) + Math.abs(shipPos[1]));

@@ -26,5 +26,5 @@ for (let form of forms) {
 
 }
 
-console.log(tock())
+console.error(tock());
 console.log(totalQuestions);

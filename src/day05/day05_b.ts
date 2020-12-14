@@ -16,7 +16,7 @@ for (let ticket of tickets) {
 
 let mySeat = ids.findIndex((v, i) => ids[i + 1] - v == 2);
 
-console.log(tock());
+console.error(tock());
 console.log(ids[mySeat] + 1);
 
 

@@ -22,5 +22,5 @@ for (let adapter of adapters) {
     }
 }
 
-console.log(tock());
+console.error(tock());
 console.log(pathMap.get(maxJolts));
