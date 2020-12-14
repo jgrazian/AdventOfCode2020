@@ -37,5 +37,5 @@ function toU36(n: number): string {
     if(n < 0){
         n = 0xFFFFFFFF + n + 1
     }
-    return parseInt(n.toString(), 10).toString(2).padStart(36, '0');
+    return n.toString(2).padStart(36, '0');
 }

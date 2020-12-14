@@ -11,31 +11,45 @@ for (let inst of instructions) {
         mask = inst.substr(7);
     } else {
         let idx = toU36(Number(inst.substring(4, inst.indexOf(']'))));
-        let val = toU36(Number(inst.substring(inst.indexOf('=') + 2)));
+        let val = Number(inst.substring(inst.indexOf('=') + 2));
 
-        let maskedVal = applyMask(val, mask);
-
-        mem.set(idx, parseInt(masked, 2));
+        applyMemMask(idx, mask).forEach(perm => mem.set(parseInt(perm, 2), val));
     }
 }
 
 console.error(tock());
 console.log([...mem.values()].reduce((p, c) => p + c));
 
-function applyMask(n: string, mask: string): string {
+function applyMemMask(n: string, mask: string): string[] {
     for (let i = 0; i < n.length; i++) {
+        // 1 overwrites
         if (mask.charAt(i) == '1') {
             n = n.substring(0, i) + '1' + n.substring(i + 1);
-        } else if (mask.charAt(i) == '0') {
-            n = n.substring(0, i) + '0' + n.substring(i + 1);
+        } else if (mask.charAt(i) == 'X') {
+            n = n.substring(0, i) + 'X' + n.substring(i + 1);
         }
     }
-    return n;
+
+    let memPerm = [n];
+    for (let i = 0; i < n.length; i++) {
+        if (n.charAt(i) != 'X') continue;
+
+        let perm = memPerm.pop();
+        let tmp = [];
+        while (perm) {
+            tmp.push(perm.substring(0, i) + '0' + perm.substring(i + 1));
+            tmp.push(perm.substring(0, i) + '1' + perm.substring(i + 1));
+            perm = memPerm.pop();
+        }
+        memPerm = tmp;
+    }
+
+    return memPerm;
 }
 
 function toU36(n: number): string {
     if(n < 0){
         n = 0xFFFFFFFF + n + 1
     }
-    return parseInt(n.toString(), 10).toString(2).padStart(36, '0');
+    return n.toString(2).padStart(36, '0');
 }
