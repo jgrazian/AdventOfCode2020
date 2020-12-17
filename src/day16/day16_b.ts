@@ -26,9 +26,11 @@ for (let line of lines) {
     }
 }
 
+
 tick();
 // remove bad tickets
-for (let i = 0; i < tickets.length; i++) {
+let remCnt = 0;
+for (let i = tickets.length - 1; i >= 0; i--) {
     let ticket = tickets[i];
 
     for (let value of ticket) {
@@ -36,28 +38,19 @@ for (let i = 0; i < tickets.length; i++) {
         for (let rule of rules.values()) {
             if ((value >= rule[0] && value <= rule[1]) || (value >= rule[2] && value <= rule[3])) {
                 isValid = true;
-                continue;
             }
         }
+
         if (!isValid) {
-            tickets.splice(i);
+            tickets.splice(i, 1);
+            remCnt++;
             break;
         }
     }
 }
 
-
-
-
-
+// Builds array of rules that match ticket values
 const matches = [];
-/* -> [
-    [0, 1, [value index where matched], .., rules.size], 
-        [], 
-        []
-    ]
-
-*/
 for (let i = 0; i < tickets.length; i++) {
     let ticket = tickets[i];
     let match = []; //[0, 1, .., tickets.len]
@@ -76,23 +69,50 @@ for (let i = 0; i < tickets.length; i++) {
     matches.push(match);
 }
 
-console.log(matches)
+// Flattens matches column wise into array of dict (ruleIdx => # of occourances in column)
+let matchMaps: Map<number, number>[] = tickets[0].map(_ => new Map());
+for (let match of matches) {
+    for (let i = 0; i < match.length; i++) {
+        let rules = match[i];
 
+        for (let ruleIdx of rules) {
+            let cur = matchMaps[i].get(ruleIdx);
+            if (cur != undefined) {
+                matchMaps[i].set(ruleIdx, cur + 1);
+            } else {
+                matchMaps[i].set(ruleIdx, 1);
+            }
 
+        }
+    }
+}
 
+// Matches rules by deduction
+let ruleMap: Map<string, number> = new Map([...rules.keys()].map(v => [v, -1]));
+while ([...ruleMap.values()].some(v => v == -1)) {
+    for (let [i, map] of matchMaps.entries()) {
+
+        let maxCount = 0;
+        let ruleIdx = -1;
+        map.forEach((v, k) => { if (v == tickets.length) { maxCount++; ruleIdx = k } });
+
+        if (maxCount != 1) continue;
+
+        ruleMap.set([...rules.keys()][ruleIdx], i);
+        matchMaps.forEach(map => map.delete(ruleIdx));
+    }
+}
+
+let ans = 1;
+ruleMap.forEach((v, k) => {
+    if (k.match('departure')) {
+        ans *= myTicket[v];
+    }
+});
+
+console.error(tock());
+console.log(ans);
 
 function testRule(rule: number[], value: number): boolean {
     return (value >= rule[0] && value <= rule[1]) || (value >= rule[2] && value <= rule[3]);
-}
-
-function sortedIndex(array: number[], value: number): number {
-    let low = 0;
-    let high = array.length;
-
-    while (low < high) {
-        let mid = (low + high) >>> 1;
-        if (array[mid] < value) low = mid + 1;
-        else high = mid;
-    }
-    return low;
 }

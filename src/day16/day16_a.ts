@@ -36,7 +36,7 @@ for (let ticket of tickets) {
         for (let rule of rules.values()) {
             if ((value >= rule[0] && value <= rule[1]) || (value >= rule[2] && value <= rule[3])) {
                 isValid = true;
-                continue;
+                break;
             }
         }
 
