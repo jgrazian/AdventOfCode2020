@@ -17,46 +17,34 @@ const opMap: {[index:string]: Op} = {
     '/': Op.div
 }
 
-function makeNode(tokens: string[]): Node {
-    let idx = 0;
-    let l: number | Node;
-    let r: number | Node;
-    let op: Op;
+function makeNode(tokens: string[], left?: number | Node): number | Node {
 
-    if (tokens[0] == '(') {
-        idx += splitGroup(tokens);
-        l = makeNode(tokens.slice(1, idx));
-    } else {
-        l = Number(tokens[0]);
-    }
-    idx++;
-
-    op = opMap[tokens[idx]];
-    idx++;
-
-    if (tokens[idx] == '(') {
-        let prev = idx;
-        idx += splitGroup(tokens, prev + 1)
-        r = makeNode(tokens.slice(prev + 1, idx));
-    } else {
-        r = Number(tokens[idx]);
-    }
-    idx++;
-
-    let n = new Node(op, l, r);
-
-    if (idx < tokens.length - 1) {
-        let next;
-        // If the rest of the right side is in () we strip the ()
-        if (tokens[idx + 1] == '(' && splitGroup(tokens.slice(idx + 1))) {
-            next = tokens.slice(idx + 2, tokens.length - 1);
+    if (!left) {
+        if (tokens[0] == '(') {
+            let groupIdx = splitGroup(tokens)
+            let left = makeNode(tokens.slice(1, groupIdx));
+            return makeNode(tokens.slice(groupIdx + 1), left);
         } else {
-            next = tokens.slice(idx + 1);
+            return makeNode(tokens.slice(1), Number(tokens[0]));
         }
-        return new Node(opMap[tokens[idx]], n, makeNode(next));
     }
 
-    return n;
+    let op: Op = opMap[tokens[0]];
+    let n;
+    if (tokens[1] == '(') {
+        let groupIdx = splitGroup(tokens)
+        n = new Node(op, left, makeNode(tokens.slice(2, groupIdx)));
+        tokens = tokens.slice(groupIdx + 1);
+    } else {
+        n = new Node(op, left, Number(tokens[1]));
+        tokens = tokens.slice(2);
+    }
+
+    if (tokens.length > 0) {
+        return makeNode(tokens, n);
+    } else {
+        return n;
+    }
 }
 
 function splitGroup(tokens: string[], start?: number): number {
@@ -107,10 +95,14 @@ class Node {
     }
 }
 
+tick();
+let ans = 0;
 for (let line of lines) {
-    let tokens = line.replaceAll(' ', '').split('');
+    let tokens = line.replaceAll(' ', '').trim().split('');
 
-    let n = makeNode(tokens);
-    console.log(n)
-    console.log(n.eval());
+    let n = <Node>makeNode(tokens);
+    ans += n.eval();
 }
+
+console.error(tock());
+console.log(ans);

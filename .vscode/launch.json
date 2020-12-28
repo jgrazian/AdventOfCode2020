@@ -10,7 +10,6 @@
         "runtimeArgs": ["run", "--inspect-brk", "-A", "--unstable", "${file}"],
         "attachSimplePort": 9229,
         "outputCapture": "std",
-        "sourceMaps": true
       }
     ]
   }
